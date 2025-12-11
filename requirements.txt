@@ -1,0 +1,8 @@
+numpy>=1.21.0
+scikit-learn>=1.0.0
+tensorflow>=2.8.0
+matplotlib>=3.5.0
+flask>=2.0.0
+pillow>=9.0.0
+jupyter>=1.0.0
+notebook>=6.4.0
