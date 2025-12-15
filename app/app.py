@@ -1,4 +1,5 @@
 from flask import Flask, render_template, jsonify, request
+from flask_cors import CORS
 import numpy as np
 import base64
 from io import BytesIO
@@ -6,38 +7,46 @@ from PIL import Image
 import os
 import sys
 
-# Ajouter le dossier src au path
+# Add src folder to path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'src'))
 from generator import GlobalGenerator, ConditionalGenerator
 
 app = Flask(__name__)
+# Enable CORS for frontend hosted on GitHub Pages
+CORS(app, resources={r"/*": {"origins": "*"}})
 
-# Charger les modèles au démarrage
-print("Chargement des modèles...")
+# Absolute paths for models (robust on Render)
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+MODEL_DIR = os.path.join(BASE_DIR, 'models')
+GLOBAL_MODEL_PATH = os.path.join(MODEL_DIR, 'global_generator.pkl')
+CONDITIONAL_MODEL_PATH = os.path.join(MODEL_DIR, 'conditional_generator.pkl')
+
+# Load models at startup
+print("Loading models...")
 
 try:
-    global_gen = GlobalGenerator.load('../models/global_generator.pkl')
+    global_gen = GlobalGenerator.load(GLOBAL_MODEL_PATH)
     has_global = True
 except FileNotFoundError:
-    print("⚠️  Modèle global non trouvé")
+    print("⚠️ Global model not found")
     has_global = False
 
 try:
-    cond_gen = ConditionalGenerator.load('../models/conditional_generator.pkl')
+    cond_gen = ConditionalGenerator.load(CONDITIONAL_MODEL_PATH)
     has_conditional = True
 except FileNotFoundError:
-    print("⚠️  Modèle conditionnel non trouvé")
+    print("⚠️ Conditional model not found")
     has_conditional = False
 
 if not has_global and not has_conditional:
-    print("❌ Aucun modèle trouvé! Exécutez d'abord train_and_compare.ipynb")
+    print("❌ No models found! Run training notebook first.")
     sys.exit(1)
 
-print(f"✓ Modèles chargés (Global: {has_global}, Conditionnel: {has_conditional})")
+print(f"✓ Models loaded (Global: {has_global}, Conditional: {has_conditional})")
 
 
 def image_to_base64(img_array):
-    """Convertit un array numpy en base64 pour l'affichage web"""
+    """Convert a numpy array to base64 for web display"""
     img_array = (img_array * 255).astype(np.uint8)
     img = Image.fromarray(img_array, mode='L')
     img = img.resize((280, 280), Image.NEAREST)
@@ -45,13 +54,12 @@ def image_to_base64(img_array):
     buffer = BytesIO()
     img.save(buffer, format='PNG')
     img_str = base64.b64encode(buffer.getvalue()).decode()
-
     return f"data:image/png;base64,{img_str}"
 
 
 @app.route('/')
 def index():
-    """Page d'accueil"""
+    """Homepage"""
     return render_template('index.html',
                            has_global=has_global,
                            has_conditional=has_conditional)
@@ -59,7 +67,7 @@ def index():
 
 @app.route('/generate', methods=['POST'])
 def generate():
-    """Endpoint pour générer des images"""
+    """Generate images endpoint"""
     try:
         data = request.get_json()
         n_samples = int(data.get('n_samples', 1))
@@ -67,49 +75,36 @@ def generate():
         percentile = int(data.get('percentile', 25))
         mode = data.get('mode', 'global')
         digit = data.get('digit', None)
-        clean_images = data.get('clean_images', True)  # NOUVEAU
-        cleaning_method = data.get('cleaning_method', 'medium')  # NOUVEAU
+        clean_images = data.get('clean_images', True)
+        cleaning_method = data.get('cleaning_method', 'medium')
 
-        # Limiter le nombre d'échantillons
+        # Clamp sample count
         n_samples = min(max(1, n_samples), 16)
 
-        # Valider le percentile
+        # Validate percentile
         if percentile not in [10, 25, 50]:
             percentile = 25
 
-        # Valider la méthode de nettoyage
+        # Validate cleaning method
         if cleaning_method not in ['light', 'medium', 'aggressive']:
             cleaning_method = 'medium'
 
-        # Générer selon le mode
+        # Generate images
         if mode == 'conditional' and has_conditional:
             if digit is None:
-                return jsonify({
-                    'success': False,
-                    'error': 'Le chiffre (digit) est requis en mode conditionnel'
-                }), 400
-
+                return jsonify({'success': False, 'error': 'Digit is required for conditional mode'}), 400
             digit = int(digit)
             if digit < 0 or digit > 9:
-                return jsonify({
-                    'success': False,
-                    'error': 'Le chiffre doit être entre 0 et 9'
-                }), 400
-
+                return jsonify({'success': False, 'error': 'Digit must be 0-9'}), 400
             images = cond_gen.generate(digit, n_samples, use_rejection, percentile,
                                        clean_images, cleaning_method)
 
         elif mode == 'global' and has_global:
             images = global_gen.generate(n_samples, use_rejection, percentile,
                                          clean_images, cleaning_method)
-
         else:
-            return jsonify({
-                'success': False,
-                'error': f'Mode {mode} non disponible'
-            }), 400
+            return jsonify({'success': False, 'error': f'Mode {mode} not available'}), 400
 
-        # Convertir en base64
         images_b64 = [image_to_base64(img) for img in images]
 
         return jsonify({
@@ -125,18 +120,13 @@ def generate():
         })
 
     except Exception as e:
-        return jsonify({
-            'success': False,
-            'error': str(e)
-        }), 500
+        return jsonify({'success': False, 'error': str(e)}), 500
 
 
 @app.route('/stats')
 def stats():
-    """Retourne des statistiques sur les modèles"""
-    stats_data = {
-        'available_modes': []
-    }
+    """Return model statistics"""
+    stats_data = {'available_modes': []}
 
     if has_global:
         stats_data['available_modes'].append('global')
@@ -161,4 +151,5 @@ def stats():
 
 
 if __name__ == '__main__':
-    app.run(debug=True, host='0.0.0.0', port=5000)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
