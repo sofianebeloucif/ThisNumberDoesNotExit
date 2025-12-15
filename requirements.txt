@@ -8,3 +8,4 @@ flask>=2.0.0
 pillow>=9.0.0
 jupyter>=1.0.0
 notebook>=6.4.0
+gunicorn
