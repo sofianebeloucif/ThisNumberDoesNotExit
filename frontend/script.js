@@ -1,3 +1,6 @@
+// URL backend Render
+const API_URL = 'https://ThisNumberDoesnotExit.onrender.com';
+
 // ============================================================
 // Translation Data
 // ============================================================
@@ -257,7 +260,7 @@ async function generateImages() {
     };
 
     try {
-        const response = await fetch('/generate', {
+        const response = await fetch(`{API_URL}/generate`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'

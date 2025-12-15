@@ -7,16 +7,16 @@ from PIL import Image
 import os
 import sys
 
-# Add src folder to path
-sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'src'))
+# Add backend folder to path for generator import
+sys.path.insert(0, os.path.dirname(__file__))
 from generator import GlobalGenerator, ConditionalGenerator
 
-app = Flask(__name__)
+app = Flask(__name__, template_folder='../frontend', static_folder='../frontend')
 # Enable CORS for frontend hosted on GitHub Pages
 CORS(app, resources={r"/*": {"origins": "*"}})
 
 # Absolute paths for models (robust on Render)
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))  # backend/
 MODEL_DIR = os.path.join(BASE_DIR, 'models')
 GLOBAL_MODEL_PATH = os.path.join(MODEL_DIR, 'global_generator.pkl')
 CONDITIONAL_MODEL_PATH = os.path.join(MODEL_DIR, 'conditional_generator.pkl')
@@ -60,9 +60,7 @@ def image_to_base64(img_array):
 @app.route('/')
 def index():
     """Homepage"""
-    return render_template('index.html',
-                           has_global=has_global,
-                           has_conditional=has_conditional)
+    return render_template('index.html')
 
 
 @app.route('/generate', methods=['POST'])
