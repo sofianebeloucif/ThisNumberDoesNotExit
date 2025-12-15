@@ -5,6 +5,7 @@ scipy>=1.7.0
 tensorflow>=2.8.0
 matplotlib>=3.5.0
 flask>=2.0.0
+flask-cors
 pillow>=9.0.0
 jupyter>=1.0.0
 notebook>=6.4.0
