@@ -1,5 +1,5 @@
 // URL backend Render
-const API_URL = 'https://ThisNumberDoesnotExit.onrender.com';
+const API_URL = 'https://thisnumberdoesnotexit.onrender.com/';
 
 // ============================================================
 // Translation Data
