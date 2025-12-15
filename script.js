@@ -260,7 +260,7 @@ async function generateImages() {
     };
 
     try {
-        const response = await fetch(`{API_URL}/generate`, {
+        const response = await fetch(`${API_URL}/generate`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
