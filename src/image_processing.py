@@ -264,7 +264,7 @@ def process_training_data(X, method='standard'):
         X_processed, processor (pour inverser)
     """
     X_processed = X.copy()
-    preprocessor: Dict[str, Any] = {'method': method}
+    processor: Dict[str, Any] = {'method': method}
 
     if method == 'standard':
         # Juste centrer
