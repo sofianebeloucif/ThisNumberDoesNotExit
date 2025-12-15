@@ -1,0 +1,290 @@
+:root {
+    /* Palette Monochrome Dark */
+    --bg-body: #050505;
+    --bg-card: #0F0F0F;
+    --bg-input: #1A1A1A;
+    --border: #333333;
+    --border-hover: #555555;
+
+    --text-main: #EAEAEA;
+    --text-muted: #888888;
+
+    --accent: #FFFFFF;
+    --success: #32D74B;
+    --radius: 8px;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: 'JetBrains Mono', monospace;
+    background-color: var(--bg-body);
+    color: var(--text-main);
+    min-height: 100vh;
+    padding: 2rem;
+    display: flex;
+    justify-content: center;
+}
+
+.container {
+    max-width: 1400px;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 380px 1fr;
+    gap: 2rem;
+}
+
+/* --- Sidebar & Controls --- */
+.sidebar {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.header {
+    position: relative;
+}
+.header h1 {
+    font-size: 1.5rem;
+    letter-spacing: -0.05em;
+    margin-bottom: 0.5rem;
+}
+.header p {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    line-height: 1.4;
+}
+
+/* Language Selector Styling */
+.lang-selector {
+    position: absolute;
+    top: 0;
+    right: 0;
+    display: flex;
+    gap: 5px;
+}
+.lang-btn {
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    padding: 5px 10px;
+    font-size: 0.7rem;
+    font-family: inherit;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: 0.2s;
+}
+.lang-btn:hover:not(.active) { border-color: var(--text-main); color: var(--text-main); }
+.lang-btn.active {
+    border-color: var(--success);
+    color: var(--success);
+    font-weight: 700;
+}
+
+
+.card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+}
+
+.card h2 {
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--text-muted);
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid var(--border);
+}
+
+/* --- Mode Selector Buttons --- */
+.mode-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.mode-btn {
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    padding: 15px 10px;
+    border-radius: var(--radius);
+    cursor: pointer;
+    transition: all 0.2s;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+}
+
+.mode-btn:hover:not(.disabled) {
+    border-color: var(--text-main);
+    color: var(--text-main);
+}
+
+.mode-btn.active {
+    background: var(--bg-input);
+    border-color: var(--success);
+    color: var(--success);
+    box-shadow: 0 0 10px rgba(50, 215, 75, 0.1);
+}
+
+.mode-btn.disabled {
+    opacity: 0.3;
+    cursor: not-allowed;
+    border-style: dashed;
+}
+
+.mode-icon { font-size: 1.2rem; }
+.mode-label { font-size: 0.8rem; font-weight: 700; }
+
+/* --- Digit Selector (0-9) --- */
+.digit-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 8px;
+    margin-top: 10px;
+}
+
+.digit-btn {
+    background: var(--bg-input);
+    border: 1px solid var(--border);
+    color: var(--text-muted);
+    padding: 10px 0;
+    border-radius: 4px;
+    cursor: pointer;
+    text-align: center;
+    font-weight: 700;
+    transition: 0.2s;
+}
+
+.digit-btn:hover { border-color: var(--text-main); color: var(--text-main); }
+
+.digit-btn.active {
+    background: var(--text-main);
+    color: var(--bg-body);
+    border-color: var(--text-main);
+}
+
+.hidden-section {
+    display: none;
+    animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
+
+
+/* --- Standard Controls --- */
+.control-group { margin-bottom: 1.5rem; }
+label { display: block; font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; }
+
+input[type=range] {
+    width: 100%; height: 4px; background: var(--border); border-radius: 2px; appearance: none; outline: none;
+}
+input[type=range]::-webkit-slider-thumb {
+    appearance: none; width: 16px; height: 16px; background: var(--accent); border-radius: 50%; cursor: pointer; border: 2px solid var(--bg-body);
+}
+
+/* Toggle Row */
+.toggle-row {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 1rem; padding: 0.8rem;
+    background: var(--bg-input); border-radius: var(--radius);
+    cursor: pointer; border: 1px solid transparent;
+}
+.toggle-row:hover { border-color: var(--border-hover); }
+.toggle-row input { accent-color: var(--success); }
+
+/* Percentile/Cleaning Buttons */
+.percentile-select {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr; /* 3 colonnes pour l'uniformité */
+    gap: 5px;
+    margin-top: 10px;
+}
+
+.p-btn {
+    background: var(--bg-input); border: 1px solid var(--border); color: var(--text-muted);
+    padding: 8px; font-family: inherit; font-size: 0.8rem; cursor: pointer; border-radius: 4px;
+    text-align: center;
+}
+.p-btn:hover { color: var(--text-main); }
+.p-btn.active {
+    border-color: var(--success); color: var(--success); font-weight: 700; background: rgba(50, 215, 75, 0.05);
+}
+
+/* Appliquer le style p-btn aux boutons de nettoyage pour l'uniformité */
+.cleaning-btn {
+    background: var(--bg-input); border: 1px solid var(--border); color: var(--text-muted);
+    padding: 8px; font-family: inherit; font-size: 0.8rem; cursor: pointer; border-radius: 4px;
+    text-align: center;
+}
+.cleaning-btn:hover { color: var(--text-main); }
+.cleaning-btn.active {
+    border-color: var(--success); color: var(--success); font-weight: 700; background: rgba(50, 215, 75, 0.05);
+}
+
+
+/* Tooltip for strictness hint */
+.tooltip-container { position: relative; display: inline-block; }
+.tooltip-icon { font-size: 0.7rem; color: var(--text-muted); margin-left: 5px; cursor: help;}
+.tooltip-text {
+    visibility: hidden; width: 200px; background-color: var(--bg-card); color: var(--text-main);
+    text-align: center; border-radius: 6px; padding: 10px; position: absolute;
+    z-index: 10; bottom: 125%; left: 50%; margin-left: -100px;
+    opacity: 0; transition: opacity 0.3s; font-size: 0.7rem; line-height: 1.3;
+    border: 1px solid var(--border);
+}
+.tooltip-container:hover .tooltip-text { visibility: visible; opacity: 1; }
+.tooltip-text::after {
+    content: ""; position: absolute; top: 100%; left: 50%; margin-left: -5px;
+    border-width: 5px; border-style: solid; border-color: var(--border) transparent transparent transparent;
+}
+
+/* Main Button */
+.btn-gen {
+    width: 100%; background: var(--accent); color: var(--bg-body); border: none; padding: 1rem;
+    font-family: inherit; font-weight: 700; font-size: 1rem; border-radius: var(--radius); cursor: pointer;
+    transition: opacity 0.2s; margin-top: 10px;
+}
+.btn-gen:hover { opacity: 0.9; }
+.btn-gen:disabled { background: var(--border); color: var(--text-muted); cursor: not-allowed; }
+
+/* --- Gallery --- */
+.gallery-area { display: flex; flex-direction: column; gap: 1rem; }
+
+.results-meta {
+    display: flex; justify-content: space-between; align-items: center; height: 30px; font-size: 0.85rem; color: var(--success);
+}
+
+.gallery-grid {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1.5rem;
+}
+
+.img-card {
+    background: var(--bg-input); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 10px; transition: 0.3s;
+}
+.img-card:hover { border-color: var(--accent); transform: translateY(-2px); }
+.img-card img {
+    width: 100%; height: auto; display: block; border-radius: 4px;
+    image-rendering: pixelated; filter: grayscale(100%);
+}
+
+/* Loading Spinner */
+.loader {
+    width: 24px; height: 24px; border: 3px solid var(--border); border-bottom-color: var(--bg-body);
+    border-radius: 50%; display: inline-block; animation: rotation 1s linear infinite;
+}
+@keyframes rotation { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+/* Error Box */
+.error-box { color: #FF453A; border: 1px solid #FF453A; padding: 10px; border-radius: var(--radius); font-size: 0.8rem; display: none; margin-top: 10px;}
+
+/* Responsive */
+@media (max-width: 900px) { .container { grid-template-columns: 1fr; } }
