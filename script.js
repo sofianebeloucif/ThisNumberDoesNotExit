@@ -182,17 +182,32 @@ slider.addEventListener('input', e => {
 
 function setMode(mode) {
     const btn = document.getElementById(`btn-mode-${mode}`);
-    if (btn.classList.contains('disabled')) return;
+    if (!btn) return; // safeguard: bouton non trouvé
+    if (btn.classList.contains('disabled')) return; // bouton désactivé
+
     currentMode = mode;
     updateModeUI();
 }
 
 function updateModeUI() {
     document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
-    document.getElementById(`btn-mode-${currentMode}`)?.classList.add('active');
-    digitWrapper.style.display = currentMode === 'conditional' ? 'block' : 'none';
-    updateInfoTag();
+
+    const activeBtn = document.getElementById(`btn-mode-${currentMode}`);
+    if (activeBtn) activeBtn.classList.add('active');
+
+    const digitWrapper = document.getElementById('digit-wrapper');
+    if (digitWrapper) {
+        digitWrapper.style.display = (currentMode === 'conditional') ? 'block' : 'none';
+    }
+
+    const infoTag = document.getElementById('info-tag');
+    if (infoTag) {
+        let modeLabel = currentMode === 'global' ? 'GLOBAL' : 'CONDITIONAL';
+        let infoString = `MODE: ${modeLabel}`;
+        infoTag.textContent = infoString;
+    }
 }
+
 
 function setDigit(digit, el) {
     currentDigit = digit;
