@@ -4,6 +4,7 @@ Prétraitement et post-traitement pour améliorer la qualité des images génér
 import numpy as np
 from scipy import ndimage
 from sklearn.decomposition import PCA
+from typing import Dict, Any
 
 
 class ImageCleaner:
@@ -263,7 +264,7 @@ def process_training_data(X, method='standard'):
         X_processed, processor (pour inverser)
     """
     X_processed = X.copy()
-    processor = {'method': method}
+    preprocessor: Dict[str, Any] = {'method': method}
 
     if method == 'standard':
         # Juste centrer
