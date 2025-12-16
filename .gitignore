@@ -28,7 +28,7 @@ env/
 # Jupyter Notebook
 .ipynb_checkpoints
 
-# Models (optionnel - décommentez si vous ne voulez pas versionner les modèles)
+# Models (optional - uncomment if you don't want to version model files)
 # models/*.pkl
 
 # IDE
