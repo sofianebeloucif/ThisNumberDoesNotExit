@@ -6,38 +6,38 @@ from PIL import Image
 import os
 import sys
 
-# Ajouter le dossier src au path
+# Add the src folder to the path
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), '..', 'src'))
 from generator import GlobalGenerator, ConditionalGenerator
 
 app = Flask(__name__)
 
-# Charger les modèles au démarrage
-print("Chargement des modèles...")
+# Load models at startup
+print("Loading models...")
 
 try:
     global_gen = GlobalGenerator.load('../models/global_generator.pkl')
     has_global = True
 except FileNotFoundError:
-    print("⚠️  Modèle global non trouvé")
+    print("⚠️  Global model not found")
     has_global = False
 
 try:
     cond_gen = ConditionalGenerator.load('../models/conditional_generator.pkl')
     has_conditional = True
 except FileNotFoundError:
-    print("⚠️  Modèle conditionnel non trouvé")
+    print("⚠️  Conditional model not found")
     has_conditional = False
 
 if not has_global and not has_conditional:
-    print("❌ Aucun modèle trouvé! Exécutez d'abord train_and_compare.ipynb")
+    print("❌ No model found! Please run train_and_compare.ipynb first")
     sys.exit(1)
 
-print(f"✓ Modèles chargés (Global: {has_global}, Conditionnel: {has_conditional})")
+print(f"✓ Models loaded (Global: {has_global}, Conditional: {has_conditional})")
 
 
 def image_to_base64(img_array):
-    """Convertit un array numpy en base64 pour l'affichage web"""
+    """Convert a numpy array to base64 for web display"""
     img_array = (img_array * 255).astype(np.uint8)
     img = Image.fromarray(img_array, mode='L')
     img = img.resize((280, 280), Image.NEAREST)
@@ -51,7 +51,7 @@ def image_to_base64(img_array):
 
 @app.route('/')
 def index():
-    """Page d'accueil"""
+    """Home page"""
     return render_template('index.html',
                            has_global=has_global,
                            has_conditional=has_conditional)
@@ -59,7 +59,7 @@ def index():
 
 @app.route('/generate', methods=['POST'])
 def generate():
-    """Endpoint pour générer des images"""
+    """Endpoint to generate images"""
     try:
         data = request.get_json()
         n_samples = int(data.get('n_samples', 1))
@@ -67,33 +67,33 @@ def generate():
         percentile = int(data.get('percentile', 25))
         mode = data.get('mode', 'global')
         digit = data.get('digit', None)
-        clean_images = data.get('clean_images', True)  # NOUVEAU
-        cleaning_method = data.get('cleaning_method', 'medium')  # NOUVEAU
+        clean_images = data.get('clean_images', True)
+        cleaning_method = data.get('cleaning_method', 'medium')
 
-        # Limiter le nombre d'échantillons
+        # Limit the number of samples
         n_samples = min(max(1, n_samples), 16)
 
-        # Valider le percentile
+        # Validate percentile
         if percentile not in [10, 25, 50]:
             percentile = 25
 
-        # Valider la méthode de nettoyage
+        # Validate cleaning method
         if cleaning_method not in ['light', 'medium', 'aggressive']:
             cleaning_method = 'medium'
 
-        # Générer selon le mode
+        # Generate according to mode
         if mode == 'conditional' and has_conditional:
             if digit is None:
                 return jsonify({
                     'success': False,
-                    'error': 'Le chiffre (digit) est requis en mode conditionnel'
+                    'error': 'Digit is required in conditional mode'
                 }), 400
 
             digit = int(digit)
             if digit < 0 or digit > 9:
                 return jsonify({
                     'success': False,
-                    'error': 'Le chiffre doit être entre 0 et 9'
+                    'error': 'Digit must be between 0 and 9'
                 }), 400
 
             images = cond_gen.generate(digit, n_samples, use_rejection, percentile,
@@ -106,10 +106,10 @@ def generate():
         else:
             return jsonify({
                 'success': False,
-                'error': f'Mode {mode} non disponible'
+                'error': f'Mode {mode} not available'
             }), 400
 
-        # Convertir en base64
+        # Convert to base64
         images_b64 = [image_to_base64(img) for img in images]
 
         return jsonify({
@@ -133,7 +133,7 @@ def generate():
 
 @app.route('/stats')
 def stats():
-    """Retourne des statistiques sur les modèles"""
+    """Return statistics about the models"""
     stats_data = {
         'available_modes': []
     }
