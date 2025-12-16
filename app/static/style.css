@@ -203,7 +203,7 @@ input[type=range]::-webkit-slider-thumb {
 /* Percentile/Cleaning Buttons */
 .percentile-select {
     display: grid;
-    grid-template-columns: 1fr 1fr 1fr; /* 3 colonnes pour l'uniformité */
+    grid-template-columns: 1fr 1fr 1fr; /* 3 columns for consistency */
     gap: 5px;
     margin-top: 10px;
 }
@@ -218,7 +218,7 @@ input[type=range]::-webkit-slider-thumb {
     border-color: var(--success); color: var(--success); font-weight: 700; background: rgba(50, 215, 75, 0.05);
 }
 
-/* Appliquer le style p-btn aux boutons de nettoyage pour l'uniformité */
+/* Apply p-btn style to cleaning buttons for consistency */
 .cleaning-btn {
     background: var(--bg-input); border: 1px solid var(--border); color: var(--text-muted);
     padding: 8px; font-family: inherit; font-size: 0.8rem; cursor: pointer; border-radius: 4px;
