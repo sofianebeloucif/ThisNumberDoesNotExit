@@ -80,8 +80,8 @@ const translations = {
 const body = document.body;
 
 // Safe reading of data attributes injected by Flask
-const HAS_GLOBAL = body.getAttribute('data-has-global') === 'true';
-const HAS_CONDITIONAL = body.getAttribute('data-has-conditional') === 'true';
+const HAS_GLOBAL = body.hasAttribute('data-has-global') && body.getAttribute('data-has-global') === 'true';
+const HAS_CONDITIONAL = body.hasAttribute('data-has-conditional') && body.getAttribute('data-has-conditional') === 'true';
 
 // Initial mode selection
 let currentMode = 'global';
@@ -361,8 +361,8 @@ window.onload = () => {
     const btnGlobal = document.getElementById('btn-mode-global');
     const btnConditional = document.getElementById('btn-mode-conditional');
 
-    if (!HAS_GLOBAL) btnGlobal.classList.add('disabled');
-    if (!HAS_CONDITIONAL) btnConditional.classList.add('disabled');
+    //if (!HAS_GLOBAL) btnGlobal.classList.add('disabled');
+    //if (!HAS_CONDITIONAL) btnConditional.classList.add('disabled');
 
     updateModeUI();
     toggleRejectionOptions(null, false);
