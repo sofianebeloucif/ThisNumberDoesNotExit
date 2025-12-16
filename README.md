@@ -9,7 +9,10 @@ Generate realistic handwritten digits using classical : **Kernel Density Estimat
 
 [🎮 Live Demo](https://sofianebeloucif.github.io/ThisNumberDoesNotExit/) | [📖 Documentation](docs/TECHNICAL.md) | [🤝 Contributing](CONTRIBUTING.md)
 
-![Generation Demo](assets/generation_demo.gif)
+<p align="center">
+  <img src="assets/generation_demo.gif" width="600">
+</p>
+
 
 ---
 
