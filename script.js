@@ -6,7 +6,7 @@ const API_URL = 'https://thisnumberdoesnotexit.onrender.com/';
 // ============================================================
 const translations = {
     en: {
-        app_title: 'MNIST Generator | Neural Dark',
+        app_title: 'ThisNumberDoesNotExist',
         h2_config: 'Configuration',
         lbl_mode: 'GENERATION MODE',
         mode_global_label: 'GLOBAL',
@@ -361,8 +361,6 @@ window.onload = () => {
     const btnGlobal = document.getElementById('btn-mode-global');
     const btnConditional = document.getElementById('btn-mode-conditional');
 
-    //if (!HAS_GLOBAL) btnGlobal.classList.add('disabled');
-    //if (!HAS_CONDITIONAL) btnConditional.classList.add('disabled');
 
     updateModeUI();
     toggleRejectionOptions(null, false);
