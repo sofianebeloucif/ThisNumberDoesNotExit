@@ -1,11 +1,12 @@
-from flask import Flask, render_template, jsonify, request
-from flask_cors import CORS
-import numpy as np
 import base64
-from io import BytesIO
-from PIL import Image
 import os
 import sys
+from io import BytesIO
+
+import numpy as np
+from PIL import Image
+from flask import Flask, render_template, jsonify, request
+from flask_cors import CORS
 
 # Add backend folder to path for generator import
 sys.path.insert(0, os.path.dirname(__file__))
@@ -13,7 +14,15 @@ from generator import GlobalGenerator, ConditionalGenerator
 
 app = Flask(__name__, template_folder='../frontend', static_folder='../frontend')
 # Enable CORS for frontend hosted on GitHub Pages
-CORS(app, resources={r"/*": {"origins": "*"}})
+GITHUB_PAGES_ORIGIN = "https://sofianebeloucif.github.io"
+
+CORS(
+    app,
+    resources={
+        r"/generate": {"origins": GITHUB_PAGES_ORIGIN},
+        r"/stats": {"origins": GITHUB_PAGES_ORIGIN}
+    }
+)
 
 # Absolute paths for models (robust on Render)
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))  # backend/
@@ -28,18 +37,18 @@ try:
     global_gen = GlobalGenerator.load(GLOBAL_MODEL_PATH)
     has_global = True
 except FileNotFoundError:
-    print("⚠️ Global model not found")
+    print(" Global model not found")
     has_global = False
 
 try:
     cond_gen = ConditionalGenerator.load(CONDITIONAL_MODEL_PATH)
     has_conditional = True
 except FileNotFoundError:
-    print("⚠️ Conditional model not found")
+    print(" Conditional model not found")
     has_conditional = False
 
 if not has_global and not has_conditional:
-    print("❌ No models found! Run training notebook first.")
+    print(" No models found! Run training notebook first.")
     sys.exit(1)
 
 print(f"✓ Models loaded (Global: {has_global}, Conditional: {has_conditional})")
