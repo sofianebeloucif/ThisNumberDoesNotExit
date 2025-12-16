@@ -16,7 +16,6 @@ Generate realistic handwritten digits using classical : **Kernel Density Estimat
 ## ✨ Features
 
 ### **Core Capabilities**
-* 🚀 **Blazing Fast**: Train in ~3 seconds, generate 1000 images/second.
 * 🎯 **Conditional Generation**: Choose exactly which digit to generate (0-9).
 * 🎨 **High Quality**: Rejection sampling + image cleaning for artifact-free results.
 * 💾 **Lightweight**: Models are 5-15 MB (10-100× smaller than GANs).
@@ -43,7 +42,7 @@ Generate realistic handwritten digits using classical : **Kernel Density Estimat
 ### **Quality Improvement**
 
 ![Comparison](assets/comparison_banner.png)
-*Before and after: rejection sampling + image cleaning*
+*Before and after: image cleaning*
 
 ---
 
