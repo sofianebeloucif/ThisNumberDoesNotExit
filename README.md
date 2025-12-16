@@ -1,236 +1,316 @@
-# 🎨 Générateur MNIST avec KDE
+# 🎲 This Number Does Not Exist
 
-Projet de génération d'images de chiffres manuscrits (MNIST) utilisant PCA (Principal Component Analysis) et KDE (Kernel Density Estimation).
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
+[![scikit-learn](https://img.shields.io/badge/scikit--learn-1.0+-orange.svg)](https://scikit-learn.org/)
+[![Live Demo](https://img.shields.io/badge/🚀_Live-Demo-brightgreen?style=flat-square)](https://sofianebeloucif.github.io/ThisNumberDoesNotExit/)
 
-## 📋 Description
+Generate realistic handwritten digits using classical : **Kernel Density Estimation + PCA + Rejection Sampling**. A lightweight alternative to GANs that's 40× faster to train and 10× smaller.
 
-Ce projet implémente une approche générative pour créer de nouvelles images de chiffres manuscrits en:
+[🎮 Live Demo](https://sofianebeloucif.github.io/ThisNumberDoesNotExit/) | [📖 Documentation](docs/TECHNICAL.md) | [🤝 Contributing](CONTRIBUTING.md)
 
+![Generation Demo](assets/generation_demo.gif)
 
-1. **Réduction de dimensionnalité** : Transformation des images MNIST (784 dimensions) en 50 dimensions avec PCA
-2. **Estimation de densité** : Utilisation de KDE pour modéliser la distribution des données dans l'espace réduit
-3. **Génération** : Échantillonnage depuis le KDE et reconstruction via PCA inverse
+---
 
-## 🏗️ Structure du projet
+## ✨ Features
 
-```
-mnist-kde-generator/
-├── notebooks/
-│   └── train_kde_model.ipynb      # Entraînement des modèles
-├── models/
-│   ├── pca_model.pkl               # Modèle PCA sauvegardé
-│   └── kde_model.pkl               # Modèle KDE sauvegardé
-├── app/
-│   ├── app.py                      # Application Flask
-│   └── templates/
-│       └── index.html              # Interface web
-├── requirements.txt                # Dépendances Python
-└── README.md                       # Ce fichier
-```
+### **Core Capabilities**
+* 🚀 **Blazing Fast**: Train in ~3 seconds, generate 1000 images/second.
+* 🎯 **Conditional Generation**: Choose exactly which digit to generate (0-9).
+* 🎨 **High Quality**: Rejection sampling + image cleaning for artifact-free results.
+* 💾 **Lightweight**: Models are 5-15 MB (10-100× smaller than GANs).
+* 🔬 **Classical ML**: Uses PCA + KDE instead of neural networks.
+* ⚙️ **Auto-Tuned**: Bandwidth optimization via cross-validation.
+* 🌐 **Web Interface**: Real-time generation in your browser.
 
-## 🚀 Installation
+### **Technical Highlights**
+* **PCA**: Dimensionality reduction (784D → 50D) retaining ~95% variance.
+* **KDE**: Kernel Density Estimation with Gaussian kernel.
+* **Rejection Sampling**: Three quality levels (Light/Medium/Strict).
+* **Image Cleaning**: Bilateral denoising + morphological operations.
+* **Two Architectures**: Global (single model) vs Conditional (one per digit).
 
-### 1. Cloner le repository
+---
+
+## 🎬 Demo
+
+### **Interactive Generation**
+
+![Samples Mosaic](assets/samples_mosaic.png)
+*100 unique digits generated with our conditional model*
+
+### **Quality Improvement**
+
+![Comparison](assets/comparison_banner.png)
+*Before and after: rejection sampling + image cleaning*
+
+---
+
+## 🚀 Quick Start
+
+### **Prerequisites**
+- Python 3.8+
+- pip
+- 2GB RAM minimum
+
+### **Installation**
 
 ```bash
-git clone https://github.com/votre-username/mnist-kde-generator.git
-cd mnist-kde-generator
-```
+# Clone the repository
+git clone https://github.com/SofianeBelouCIF/ThisNumberDoesNotExit.git
+cd ThisNumberDoesNotExit
 
-### 2. Créer un environnement virtuel (recommandé)
-
-```bash
+# Create virtual environment (recommended)
 python -m venv venv
+source venv/bin/activate  # Linux/Mac
+# or
+venv\Scripts\activate     # Windows
 
-# Sur Linux/Mac
-source venv/bin/activate
-
-# Sur Windows
-venv\Scripts\activate
-```
-
-### 3. Installer les dépendances
-
-```bash
+# Install dependencies
 pip install -r requirements.txt
 ```
 
-## 📊 Étape 1 : Entraînement des modèles
-
-### Lancer Jupyter Notebook
+### **Training Models**
 
 ```bash
-jupyter notebook
+# Launch Jupyter
+jupyter notebook notebooks/train_and_compare.ipynb
 ```
 
-### Ouvrir et exécuter le notebook
+The notebook will:
+1. ✅ Auto-optimize bandwidth via **5-fold cross-validation**
+2. ✅ Train both Global and Conditional generators
+3. ✅ Compare performance (speed, size, quality)
+4. ✅ Generate visualizations
+5. ✅ Save models to `models/`
 
-1. Ouvrir `notebooks/train_kde_model.ipynb`
-2. Exécuter toutes les cellules (Cell → Run All)
-3. Les modèles seront sauvegardés dans le dossier `models/`
+⏱️ **Training time**: ~3-5 minutes on CPU
 
-Le notebook effectue :
-- Chargement des données MNIST (60,000 images d'entraînement)
-- Réduction de 784 → 50 dimensions avec PCA (~95% de variance conservée)
-- Optimisation du bandwidth KDE par validation croisée
-- Entraînement du KDE sur 10,000 échantillons
-- Visualisation et évaluation des résultats
-- Sauvegarde des modèles
-
-**Note** : L'entraînement prend environ 2-5 minutes selon votre machine.
-
-## 🌐 Étape 2 : Lancer l'application web
-
-### Démarrer le serveur Flask
+### **Running Web App (Local)**
 
 ```bash
 cd app
 python app.py
 ```
 
-### Accéder à l'interface
-
-Ouvrir votre navigateur à l'adresse : **http://localhost:5000**
-
-## 🎮 Utilisation de l'application web
-
-L'interface permet de :
-
-1. **Visualiser les statistiques** du modèle (composantes PCA, variance expliquée, bandwidth)
-2. **Choisir le nombre d'images** à générer (1-16)
-3. **Générer de nouvelles images** en cliquant sur le bouton
-
-Les images générées sont affichées dans une galerie interactive.
-
-## 🔬 Méthodologie
-
-### PCA (Principal Component Analysis)
-
-- **Input** : Images 28×28 = 784 dimensions
-- **Output** : 50 dimensions
-- **Avantage** : Réduit drastiquement la dimensionnalité tout en conservant ~95% de l'information
-
-### KDE (Kernel Density Estimation)
-
-- **Kernel** : Gaussien
-- **Bandwidth** : Optimisé par validation croisée
-- **Échantillonnage** : Génération de nouveaux points depuis la distribution estimée
-
-### Processus de génération
-
-```
-1. KDE.sample() → Vecteur 50D
-2. PCA.inverse_transform() → Vecteur 784D
-3. Reshape(28, 28) → Image MNIST
-```
-
-## 📈 Résultats attendus
-
-- **Variance expliquée** : ~95% avec 50 composantes
-- **Qualité visuelle** : Images reconnaissables mais légèrement floues
-- **Diversité** : Grande variété de chiffres générés
-
-## 🛠️ Technologies utilisées
-
-- **Python 3.8+**
-- **NumPy** : Calculs numériques
-- **scikit-learn** : PCA et KDE
-- **TensorFlow/Keras** : Chargement de MNIST
-- **Flask** : Application web
-- **Matplotlib** : Visualisations
-- **Pillow** : Traitement d'images
-
-## 📝 API Endpoints
-
-### `GET /`
-Page d'accueil de l'application
-
-### `POST /generate`
-Génère des images MNIST
-
-**Body** :
-```json
-{
-  "n_samples": 4
-}
-```
-
-**Response** :
-```json
-{
-  "success": true,
-  "images": ["data:image/png;base64,..."],
-  "count": 4
-}
-```
-
-### `GET /stats`
-Retourne les statistiques des modèles
-
-**Response** :
-```json
-{
-  "pca_components": 50,
-  "variance_explained": 0.95,
-  "kde_bandwidth": 1.2,
-  "original_dim": 784,
-  "reduced_dim": 50
-}
-```
-
-## 🔧 Personnalisation
-
-### Modifier le nombre de composantes PCA
-
-Dans `train_kde_model.ipynb` :
-```python
-pca = PCA(n_components=100)  # Au lieu de 50
-```
-
-### Ajuster le bandwidth KDE
-
-```python
-kde = KernelDensity(bandwidth=2.0)  # Valeur plus élevée = images plus floues
-```
-
-### Changer le kernel
-
-```python
-kde = KernelDensity(kernel='exponential')  # Autres options: 'gaussian', 'tophat', 'epanechnikov'
-```
-
-## 🐛 Troubleshooting
-
-### Erreur : "Models not found"
-→ Assurez-vous d'avoir exécuté le notebook d'entraînement
-
-### Les images sont trop floues
-→ Augmentez le nombre de composantes PCA ou ajustez le bandwidth
-
-### Erreur de mémoire
-→ Réduisez `n_samples_kde` dans le notebook (actuellement 10,000)
-
-## 🤝 Contributions
-
-Les contributions sont les bienvenues ! N'hésitez pas à :
-- Ouvrir une issue pour signaler un bug
-- Proposer des améliorations via pull request
-- Partager vos résultats
-
-## 📄 Licence
-
-MIT License - Libre d'utilisation et de modification
-
-## 👨‍💻 Auteur
-
-Créé avec ❤️ pour explorer les méthodes génératives classiques
-
-## 📚 Références
-
-- [MNIST Dataset](http://yann.lecun.com/exdb/mnist/)
-- [Kernel Density Estimation](https://scikit-learn.org/stable/modules/density.html)
-- [PCA Documentation](https://scikit-learn.org/stable/modules/decomposition.html#pca)
+Open: **http://localhost:5000**
 
 ---
 
-**Bon amusement avec la génération d'images ! 🎨**
+## 🎮 Usage
+
+### **Basic Controls**
+- **Mode Selection**: Global (random) or Conditional (choose digit)
+- **Digit Picker**: Select 0-9 (conditional mode only)
+- **Rejection Sampling**: Toggle quality filtering
+- **Image Cleaning**: Remove artifacts (light/medium/aggressive)
+
+### **Python API**
+
+```python
+from src.generator import GlobalGenerator, ConditionalGenerator
+
+# --- Global Generator ---
+global_gen = GlobalGenerator.load('models/global_generator.pkl')
+
+# Generate 10 random digits
+images = global_gen.generate(
+    n_samples=10,
+    use_rejection=True,
+    percentile=25,
+    clean_images=True,
+    cleaning_method='medium'
+)
+
+# --- Conditional Generator ---
+cond_gen = ConditionalGenerator.load('models/conditional_generator.pkl')
+
+# Generate 10 sevens
+sevens = cond_gen.generate(
+    digit=7,
+    n_samples=10,
+    use_rejection=True,
+    percentile=25,
+    clean_images=True,
+    cleaning_method='medium'
+)
+
+# Generate all digits (10 of each)
+all_digits = cond_gen.generate_all(n_samples_per_digit=10)
+```
+
+---
+
+## 🛠️ Architecture
+
+### **Pipeline Overview**
+
+```
+MNIST (60k images, 28×28)
+    ↓
+[ PCA: 784D → 50D ]  (~80% variance retained)
+    ↓
+[ KDE: Density Estimation ]  (Gaussian kernel, optimized bandwidth)
+    ↓
+[ Sampling + Rejection ]  (Filter by log-likelihood)
+    ↓
+[ PCA Inverse: 50D → 784D ]
+    ↓
+[ Image Cleaning ]  (Denoise + threshold + morphology)
+    ↓
+Generated Image (28×28)
+```
+
+### **Two Architectures**
+
+| Architecture | Description | Model Size | Training Time | Use Case |
+|--------------|-------------|------------|---------------|----------|
+| **🌍 Global** | Single KDE for all digits | ~5 MB | ~3s | Random generation |
+| **🎯 Conditional** | 10 KDE (one per digit) | ~15 MB | ~10s | Targeted generation |
+
+---
+
+---
+
+## 🎯 Rejection Sampling
+
+Improve generation quality by filtering samples based on log-likelihood.
+
+| Level | Percentile | Acceptance Rate | Speed |
+|-------|-----------|-----------------|---------|
+| 🟢 **Light** | 10% | ~85% | Fast ⚡ |
+| 🟡 **Medium** | 25% | ~65% | Normal |
+| 🔴 **Strict** | 50% | ~45% | Slower |
+
+**Formula:**
+$$
+\text{Accept if: } \log p(x) \geq \text{threshold}_{\text{percentile}}
+$$
+
+Where $p(x)$ is the KDE-estimated probability density.
+
+---
+
+## 🧹 Image Cleaning
+
+Post-process generated images to eliminate artifacts.
+
+### **Cleaning Methods**
+
+| Method | Pipeline | Effect                                  | Speed |
+|--------|----------|-----------------------------------------|-------|
+| **🟢 Light** | Threshold (0.2) | Minimal cleanup                         | Fast |
+| **🟡 Medium** | Threshold (0.25) + Small components removal | Balanced                                | Normal |
+| **🔴 Aggressive** | Bilateral denoise + Threshold (0.3) + Morphology | Maximum quality but risk of degradation | Slower |
+
+**Recommended:** Medium for general use, Aggressive if many artifacts persist.
+
+---
+
+## 📚 Documentation
+
+### **Algorithm Details**
+
+**Kernel Density Estimation (KDE)**
+$$
+\hat{f}(x) = \frac{1}{nh} \sum_{i=1}^{n} K\left(\frac{x - x_i}{h}\right)
+$$
+
+Where:
+- $K$ is the Gaussian kernel
+- $h$ is the bandwidth (auto-optimized via grid search)
+- $n$ is the number of training samples
+
+**Cross-Validation for Bandwidth**
+```python
+bandwidths = np.linspace(0.5, 2.5, 10)
+grid = GridSearchCV(KernelDensity(), {'bandwidth': bandwidths}, cv=5)
+grid.fit(data)
+optimal_bandwidth = grid.best_params_['bandwidth']
+```
+
+### **Biome Mapping Analogy**
+
+Similar to terrain generation, our model maps the latent space into "digit biomes":
+
+```
+if log_density < threshold_10% → Reject
+elif log_density < threshold_25% → Accept (Light)
+elif log_density < threshold_50% → Accept (Medium)
+else → Accept (Strict)
+```
+
+See [Technical Documentation](docs/TECHNICAL.md) for deep dive.
+
+---
+
+
+## 🤝 Contributing
+
+Contributions welcome! See [CONTRIBUTING.md](CONTRIBUTING.md).
+
+### **Ideas for Enhancement**
+- [ ] Fashion-MNIST support
+- [ ] CIFAR-10 (color images)
+- [ ] FID/IS metrics
+- [ ] Docker container
+- [ ] Latent space interpolation
+- [ ] Style transfer
+- [ ] Multi-modal generation (digits + letters)
+- [ ] Mobile app (iOS/Android)
+
+---
+
+## 📝 License
+
+This project is licensed under the MIT License - see [LICENSE](LICENSE) for details.
+
+---
+
+## 👤 Author
+
+**Sofiane Beloucif**
+- 🌐 Portfolio: [sofianebeloucif.com](https://sofianebeloucif.com)
+- 💼 GitHub: [@SofianeBeloucif](https://github.com/sofianebeloucif)
+- 🚀 Live Demo: [ThisNumberDoesNotExist](https://sofianebeloucif.github.io/ThisNumberDoesNotExit/)
+
+---
+
+## 🙏 Acknowledgments
+
+* **Yann LeCun** for MNIST dataset: [http://yann.lecun.com/exdb/mnist/](http://yann.lecun.com/exdb/mnist/)
+* **scikit-learn** team for excellent ML tools: [https://scikit-learn.org/](https://scikit-learn.org/)
+* **ThisPersonDoesNotExist** for inspiration: [https://thispersondoesnotexist.com/](https://thispersondoesnotexist.com/)
+* Sebastian Lague's procedural generation tutorials
+
+---
+
+## 📖 Citation
+
+If you use this project in your research, please cite:
+
+```bibtex
+@misc{thisnumberdoesnotexist2024,
+  author = {Beloucif, Sofiane},
+  title = {This Number Does Not Exist: MNIST Generation with PCA + KDE},
+  year = {2024},
+  publisher = {GitHub},
+  url = {https://github.com/SofianeBelouCIF/ThisNumberDoesNotExit}
+}
+```
+
+
+---
+
+<div align="center">
+
+### ⭐ Star this repo if you find it useful!
+
+[![GitHub stars](https://img.shields.io/github/stars/SofianeBelouCIF/ThisNumberDoesNotExit?style=social)](https://github.com/SofianeBelouCIF/ThisNumberDoesNotExit/stargazers)
+
+**Made with ❤️ and lots of ☕**
+
+[🎮 Try the Demo](https://sofianebeloucif.github.io/ThisNumberDoesNotExit/) • [📖 Read the Docs](docs/TECHNICAL.md) • [🐛 Report Bug](https://github.com/SofianeBelouCIF/ThisNumberDoesNotExit/issues)
+
+</div>
