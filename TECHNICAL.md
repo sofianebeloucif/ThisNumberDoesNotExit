@@ -27,7 +27,7 @@
 │                                                              │
 │  Input:  784 dimensions (28×28 pixels)                      │
 │  Output: 50 dimensions                                       │
-│  Variance Retained: ~95%                                     │
+│  Variance Retained: ~82%                                     │
 └────────────────────────┬────────────────────────────────────┘
                          │
                          ▼
@@ -108,7 +108,7 @@ Given data matrix $X \in \mathbb{R}^{n \times d}$ (n samples, d dimensions):
 **Variance Retained:**
 $$\text{Variance Ratio} = \frac{\sum_{i=1}^{k} \lambda_i}{\sum_{i=1}^{d} \lambda_i}$$
 
-For our case: $k=50$, variance ≈ 85%
+For our case: $k=50$, variance ≈ 82%
 
 ---
 

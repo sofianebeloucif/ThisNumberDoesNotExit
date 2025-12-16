@@ -24,7 +24,7 @@ Generate realistic handwritten digits using classical : **Kernel Density Estimat
 * 🌐 **Web Interface**: Real-time generation in your browser.
 
 ### **Technical Highlights**
-* **PCA**: Dimensionality reduction (784D → 50D) retaining ~95% variance.
+* **PCA**: Dimensionality reduction (784D → 50D) retaining ~82% variance.
 * **KDE**: Kernel Density Estimation with Gaussian kernel.
 * **Rejection Sampling**: Three quality levels (Light/Medium/Strict).
 * **Image Cleaning**: Bilateral denoising + morphological operations.
@@ -148,7 +148,7 @@ all_digits = cond_gen.generate_all(n_samples_per_digit=10)
 ```
 MNIST (60k images, 28×28)
     ↓
-[ PCA: 784D → 50D ]  (~80% variance retained)
+[ PCA: 784D → 50D ]  (~82% variance retained)
     ↓
 [ KDE: Density Estimation ]  (Gaussian kernel, optimized bandwidth)
     ↓
